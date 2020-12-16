@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between">
+    <h2>{{shelter.address}}</h2>
+    <a href="{% url 'download_report' shelter.id %}"><button class="btn">Загрузить реестр </button></a>
+  </div>
+
+  <h2>Животные</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Кличка</th>
+        <th scope="col">Вид</th>
+        <th scope="col">Идентификационный номер</th>
+        <th scope="col">Номер карты</th>
+        <th scope="col">Социализировано</th>
+        <th scope="col">Карточка</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ais in shelter.animalinshelter_set.all %}
+        <tr>
+          <td>{{ais.animal.name}}</td>
+          <td>{{ais.animal.kind.name}}</td>
+          <td>{{ais.animal.identification_number}}</td>
+          <td>{{ais.animal.cart_number}}</td>
+          <td>{% if ais.animal.is_socialization %} Да {% else %} Нет {% endif %}</td>
+          <td><a href="{% url 'download_card' ais.id %}">Загрузить карточку</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h1>Запросы</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">id</th>
+        <th scope="col">Номер вальера</th>
+        <th scope="col">Кличка</th>
+        <th scope="col">ФИО</th>
+        <th scope="col">Контакты</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ashelter in shelter.animalinshelter_set.all %}
+        {% for ar in ashelter.animalrequest_set.all %}
+          <tr>
+            <th scope="row">1</th>
+            <td>{{ar.animal_shelter.animal.identification_number}}</td>
+            <td>{{ar.animal_shelter.aviary_number}}</td>
+            <td>{{ar.animal_shelter.animal.name}}</td>
+            <td>{{ar.owner_name}}</td>
+            <td>{{ar.owner_contact}}</td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+</div>
+{% endblock %}
